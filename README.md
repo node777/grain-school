@@ -34,7 +34,9 @@ npm run build     # tsc --noEmit, then vite build into dist/
 ## Deploy
 
 `.github/workflows/deploy.yml` tests, builds and publishes `dist/` to GitHub Pages on every push
-to `main`. `public/CNAME` names the domain `grain.school`. Point the domain's DNS at GitHub Pages
+to `main`. Pages is turned on once by hand, because the workflow's token may not create a Pages
+site: Settings → Pages → Build and deployment → Source: **GitHub Actions**. `public/CNAME` names
+the domain `grain.school`. Point the domain's DNS at GitHub Pages
 (apex `A`/`AAAA` records, or `ALIAS`), then turn on "Enforce HTTPS" in the repository's Pages
 settings.
 
