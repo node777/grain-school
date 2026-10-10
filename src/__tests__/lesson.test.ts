@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { DOORS, QUESTIONS, lesson } from '@/school/lesson'
+import { DOORS, LESSONS, QUESTIONS, lesson } from '@/school/lesson'
+import { TOOLS } from '@/school/tools'
+import { CLASS, VOICES } from '@/voices/voices'
+import { parseHash, hrefFor } from '@/core/router'
 import { ATLAS_URL } from '@/school/links'
 import { oneClock, partOfDay } from '@/school/stamp'
 
@@ -36,11 +39,49 @@ describe('the lesson', () => {
     for (const d of DOORS) expect(d.href).toBe(`${ATLAS_URL}/#/${d.name.toLowerCase()}`)
   })
 
-  it('keeps every line short enough for the bubble, and every answer pointing into the atlas', () => {
-    for (const s of steps) expect(s.say.length).toBeLessThan(180)
+  it('keeps every answer short, and pointing into the atlas or the school', () => {
     for (const q of QUESTIONS) {
       expect(q.answer.length).toBeLessThan(200)
-      expect(q.link.href.startsWith(ATLAS_URL)).toBe(true)
+      expect(q.link.href.startsWith(ATLAS_URL) || q.link.href.startsWith('#/')).toBe(true)
     }
+  })
+})
+
+describe('every lesson', () => {
+  const now = new Date(2026, 9, 10, 9, 30, 0)
+  for (const l of LESSONS) {
+    const steps = l.steps(now)
+    it(`${l.id}: speaks only in known voices, in lines that fit the bubble`, () => {
+      for (const s of steps) {
+        expect(VOICES[s.speaker ?? 'kyri']).toBeDefined()
+        expect(s.say.length).toBeLessThan(180)
+      }
+    })
+    it(`${l.id}: ends with a door into the atlas`, () => {
+      expect(steps[steps.length - 1].link?.href.startsWith(ATLAS_URL)).toBe(true)
+    })
+    it(`${l.id}: has a route that leads back to it`, () => {
+      const r = parseHash(hrefFor({ room: 'classroom', lesson: l.id }))
+      expect(r).toEqual({ room: 'classroom', lesson: l.id })
+    })
+  }
+  it('lesson two lets each classmate speak for themselves', () => {
+    const speakers = LESSONS[1].steps(now).map((s) => s.speaker).filter(Boolean)
+    expect(new Set(speakers)).toEqual(new Set(CLASS.map((v) => v.id)))
+  })
+})
+
+describe('the voices and the hall', () => {
+  it('gives every classmate something to say', () => {
+    for (const v of CLASS) expect(v.lines.length).toBeGreaterThan(0)
+  })
+  it('opens the atlas first, and numbers its rooms in order', () => {
+    expect(TOOLS[0]).toMatchObject({ id: 'atlas', status: 'open', href: ATLAS_URL })
+    expect(TOOLS.map((t) => t.room)).toEqual(TOOLS.map((_, i) => i + 1))
+    for (const t of TOOLS) if (t.status === 'open') expect(t.href).toMatch(/^https:\/\//)
+  })
+  it('routes the hall', () => {
+    expect(parseHash('#/hall')).toEqual({ room: 'hall' })
+    expect(parseHash('')).toEqual({ room: 'classroom', lesson: 'atlas' })
   })
 })

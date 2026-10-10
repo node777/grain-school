@@ -92,6 +92,7 @@
   background: color-mix(in srgb, var(--chalk-weld) 70%, transparent); border-radius: 2px; transform: rotate(-.5deg);
 }
 .chalk-line { font-size: clamp(17px, 2.1vw, 30px); line-height: 1.3; }
+.chalk-pair { font-size: clamp(16px, 1.8vw, 26px); line-height: 1.3; }
 .chalk-note { font-style: italic; opacity: .72; font-size: .78em; }
 .chalk-stamp { font-size: clamp(17px, 2vw, 28px); line-height: 1.3; }
 .chalk-stamp .mono { letter-spacing: .06em; color: var(--chalk-weld); }
@@ -143,8 +144,9 @@
   transform: rotate(45deg); border-radius: 0 0 var(--r1) 0;
 }
 .bubble-who { font-size: 12px; display: flex; gap: 6px; align-items: baseline; }
-.bubble-who b { color: var(--brass); font-weight: 600; letter-spacing: .04em; }
-:root[data-mode='stone'] .bubble-who b { color: var(--brass-dim); }
+.bubble-who b { color: var(--who-hue, var(--brass)); font-weight: 600; letter-spacing: .04em; }
+:root[data-mode='stone'] .bubble-who b { color: var(--who-accent, var(--brass-dim)); }
+.bubble { border-left: 3px solid color-mix(in srgb, var(--who-hue, var(--brass)) 70%, transparent); }
 .bubble-say { margin: 4px 0 8px; font-size: clamp(16px, 1.35vw, 19.5px); line-height: 1.5; color: var(--ink-surface); min-height: 4.5em; }
 .caret[hidden] { display: none; }
 .caret { display: inline-block; width: 2px; height: 1em; margin-left: 2px; vertical-align: -0.12em; background: var(--brass); animation: vc-think 1s steps(2) infinite; }
@@ -166,6 +168,11 @@
 .dot::before { content: ''; width: 7px; height: 7px; border-radius: 2px; background: var(--rule); transition: background var(--respond) var(--ease), width var(--respond) var(--ease); }
 .dot:hover::before { background: var(--ink-3); }
 .dot.on::before { width: 14px; background: var(--brass); }
+.lessons { display: flex; flex-wrap: wrap; gap: 2px 14px; margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--rule); font-size: 12px; }
+.lessons a { color: var(--ink-3); text-decoration: none; }
+.lessons a:hover { color: var(--ink); }
+.lessons a[aria-current='page'] { color: var(--ink-2); font-weight: 600; }
+.lessons .star { color: var(--weld); }
 .questions { list-style: none; margin: 8px 0 4px; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
 
 .kyri { position: relative; align-self: flex-start; margin-left: 18px; display: grid; justify-items: center; flex: none; }
@@ -176,19 +183,25 @@
 .pointer {
   position: absolute; right: 78%; top: 52%; width: clamp(100px, 11vw, 170px); height: 20px;
   transform-origin: 100% 50%; transform: rotate(-62deg); opacity: 0;
-  transition: transform var(--settle) var(--ease), opacity var(--respond) var(--ease);
+  transition: transform var(--settle) var(--ease), width var(--settle) var(--ease), opacity var(--respond) var(--ease);
 }
-.pointer svg { width: 100%; height: 100%; display: block; overflow: visible; }
-.kyri[data-point='board'] .pointer { opacity: 1; transform: rotate(14deg); }
-.kyri[data-point='clock'] .pointer { opacity: 1; transform: rotate(40deg) scaleX(1.25); }
-.kyri[data-point='desk'] .pointer { opacity: 1; transform: rotate(-46deg) scaleX(1.2); }
+.pointer svg { width: 100%; height: 24px; margin-top: -2px; display: block; overflow: visible; }
+/* the angle and reach come from useAim, which measures the room */
+.kyri:not([data-point='none']) .pointer { opacity: 1; }
 
 /* ---------- the class ---------- */
 .classmates {
   position: absolute; left: 5%; right: 5%; bottom: 14%; z-index: 4;
   display: flex; justify-content: space-around; align-items: flex-end; pointer-events: none;
 }
-.seat { margin: 0; display: grid; justify-items: center; pointer-events: auto; }
+.seat {
+  margin: 0; padding: 0; border: none; background: none; cursor: pointer; font: inherit; color: inherit;
+  display: grid; justify-items: center; pointer-events: auto; border-radius: var(--r2);
+  transition: transform var(--respond) var(--ease);
+}
+.seat:hover { transform: translateY(-3px); }
+.seat.turned { transform: translateY(-8px); }
+.seat.turned .chair { color: var(--gold-pale); box-shadow: 0 0 0 2px color-mix(in srgb, var(--gold) 60%, transparent), 0 6px 12px rgba(0, 0, 0, .25); }
 .seat .voice-character { width: clamp(58px, 7vw, 100px); height: auto; margin-bottom: -18%; position: relative; z-index: 0; }
 .chair {
   position: relative; z-index: 1; min-width: clamp(78px, 9vw, 128px); padding: 7px 10px 16px; text-align: center;
@@ -233,6 +246,20 @@
   position: absolute; right: 12%; bottom: 14%; padding: 1px 8px; border-radius: var(--r1);
   background: color-mix(in srgb, var(--brass) 70%, var(--wood-lo)); color: var(--sky-deep);
   font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; transform: rotate(-2deg);
+}
+
+/* ---------- the teacher on the left (the default) ---------- */
+@media (min-width: 901px) and (min-height: 601px) {
+  :root[data-side='left'] .board { left: 35%; }
+  :root[data-side='left'] .clock { left: 65.5%; }
+  :root[data-side='left'] .lamp { background: radial-gradient(ellipse 48% 70% at 64% 0%, color-mix(in srgb, var(--gold) 13%, transparent), transparent 70%); }
+  :root[data-mode='stone'][data-side='left'] .lamp { background: radial-gradient(ellipse 48% 70% at 64% 0%, rgba(255, 250, 235, .45), transparent 70%); }
+  :root[data-side='left'] .teacher { left: 2.5%; right: 67%; }
+  :root[data-side='left'] .teacher .kyri { align-self: flex-end; margin: 0 18px 0 0; }
+  :root[data-side='left'] .teacher .bubble::after { left: auto; right: 64px; }
+  /* the pointer pivots at Kyri's other side and reaches right, its ear still at the tip */
+  :root[data-side='left'] .pointer { right: auto; left: 78%; transform-origin: 0 50%; }
+  :root[data-side='left'] .pointer svg { transform: scaleX(-1); }
 }
 
 /* ---------- small and tall screens: the room stacks ---------- */

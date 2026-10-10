@@ -1,0 +1,102 @@
+/*
+ * The hall: the same wall, wainscot and floor as the classroom, with a door for each grain tool.
+ * Doors are arched at the top and nearly square at the sill (rounded, never square). An open
+ * door swings in under the hand and shows warm light; a kept door stays shut with a sprout on it.
+ */
+
+.hall { position: absolute; inset: 0; }
+
+.keeper {
+  position: absolute; top: 5%; bottom: 17%; z-index: 3;
+  left: 67%; right: 2.5%;
+  display: flex; flex-direction: column; justify-content: space-between; gap: 10px;
+}
+.kyli { position: relative; align-self: flex-start; margin-left: 18px; display: grid; justify-items: center; }
+.kyli .voice-character { width: clamp(110px, 11vw, 170px); height: auto; filter: drop-shadow(0 5px 6px rgba(0, 0, 0, .2)); }
+.keeper .bubble-controls .icon-btn { font-size: 13px; }
+
+.doors {
+  position: absolute; bottom: 17%; left: 3%; right: 35%; z-index: 2; margin: 0; padding: 0; list-style: none;
+  display: flex; justify-content: space-evenly; align-items: flex-end; gap: 12px;
+}
+.doors li { display: flex; }
+.door {
+  display: grid; justify-items: center; gap: 12px; padding: 0; border: none; background: none; font: inherit; color: inherit;
+  text-decoration: none; cursor: pointer; border-radius: var(--r3);
+}
+.door:hover, .door:focus-visible { color: inherit; }
+
+.hall-sign {
+  position: absolute; top: 9%; left: 35%; right: 3%; z-index: 1; text-align: center; pointer-events: none;
+}
+.hall-sign h1 {
+  margin: 0; font-weight: 400; font-style: italic; font-size: clamp(30px, 3.6vw, 54px); line-height: 1.1;
+  color: var(--brass); letter-spacing: .02em; text-shadow: 0 1px 0 rgba(0, 0, 0, .25);
+}
+.hall-sign p { margin: 4px 0 0; font-family: var(--sans); font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-3); }
+.hall-sign::after { content: ''; display: block; width: 120px; height: 2px; margin: 12px auto 0; border-radius: 2px; background: var(--brass-dim); opacity: .6; }
+.plaque {
+  display: grid; justify-items: center; gap: 1px; min-width: clamp(120px, 12vw, 180px); padding: 7px 12px 8px;
+  border-radius: var(--r2); border: 1px solid var(--brass-dim);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--brass) 26%, var(--surface)), var(--surface));
+  box-shadow: 0 3px 8px rgba(0, 0, 0, .18); text-align: center; line-height: 1.25;
+  transition: border-color var(--respond) var(--ease), box-shadow var(--respond) var(--ease);
+}
+.plaque b { font-weight: 400; font-size: clamp(16px, 1.4vw, 21px); color: var(--ink-surface); }
+.plaque-room { font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); }
+.plaque-what { font-style: italic; font-size: 13.5px; color: var(--ink-2); }
+.plaque-host { font-size: 11px; color: var(--ink-3); }
+.door.here .plaque, .door:hover .plaque { border-color: var(--gold); box-shadow: 0 0 0 3px color-mix(in srgb, var(--gold) 26%, transparent), 0 3px 8px rgba(0, 0, 0, .18); }
+
+.door-frame {
+  position: relative; display: block; width: clamp(104px, 10.5vw, 168px); aspect-ratio: 5 / 9;
+  border: clamp(6px, .7vw, 10px) solid var(--wood-lo);
+  border-radius: 46% 46% var(--r1) var(--r1) / 26% 26% var(--r1) var(--r1);
+  background: var(--sky-deep); perspective: 600px; overflow: hidden;
+  box-shadow: 0 0 0 1px var(--wood), 0 10px 22px rgba(0, 0, 0, .3);
+}
+.door-light { position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 40% 60%, color-mix(in srgb, var(--gold) 70%, transparent), color-mix(in srgb, var(--annatto) 30%, var(--sky-deep)) 75%); }
+.door.kept .door-light { background: var(--sky-deep); }
+.door-leaf {
+  position: absolute; inset: 0; transform-origin: 0 50%;
+  border-radius: inherit;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, .12) 0 2px, transparent 2px calc(100% - 2px), rgba(0, 0, 0, .12) calc(100% - 2px)),
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, .05) 0 1px, transparent 1px 14px),
+    linear-gradient(180deg, var(--wood-hi), var(--wood) 60%, var(--wood-lo));
+  transition: transform var(--settle) var(--ease);
+}
+.door-pane {
+  position: absolute; left: 22%; right: 22%; top: 12%; height: 26%;
+  border-radius: 46% 46% var(--r1) var(--r1) / 30% 30% var(--r1) var(--r1);
+  border: 3px solid var(--wood-lo);
+  background: radial-gradient(ellipse at 50% 70%, color-mix(in srgb, var(--gold) 75%, transparent), color-mix(in srgb, var(--annatto) 45%, var(--sky)));
+}
+.door.kept .door-pane { background: linear-gradient(180deg, var(--sky-haze), var(--sky-deep)); }
+.door-knob { position: absolute; right: 12%; top: 56%; width: 9px; height: 9px; border-radius: 50%; background: var(--brass); box-shadow: 0 1px 2px rgba(0, 0, 0, .4); }
+.door-sprout { position: absolute; left: 50%; top: 58%; width: 34%; transform: translate(-50%, -50%); opacity: .9; }
+.door.open:hover .door-leaf, .door.open:focus-visible .door-leaf { transform: rotateY(-42deg); }
+.door.kept { cursor: default; }
+.door.kept .door-frame { filter: saturate(.75); }
+
+/* Kyli on the left, with the teacher */
+@media (min-width: 901px) and (min-height: 601px) {
+  :root[data-side='left'] .keeper { left: 2.5%; right: 67%; }
+  :root[data-side='left'] .keeper .kyli { align-self: flex-end; margin: 0 18px 0 0; }
+  :root[data-side='left'] .keeper .bubble::after { left: auto; right: 64px; }
+  :root[data-side='left'] .doors { left: 35%; right: 3%; }
+  :root[data-side='right'] .hall-sign { left: 3%; right: 35%; }
+}
+
+@media (max-width: 900px), (max-height: 600px) {
+  .hall { position: relative; inset: auto; display: flex; flex-direction: column; gap: 22px; padding: 14px 16px 28px; min-height: 100%; }
+  .keeper { position: relative; inset: auto; flex-direction: column-reverse; gap: 6px; }
+  .keeper .bubble::after { left: 64px; bottom: auto; top: -11px; transform: rotate(225deg); }
+  .kyli { margin: 0 0 4px 6px; }
+  .kyli .voice-character { width: 84px; }
+  .doors { position: relative; inset: auto; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 12px; justify-items: center; }
+  .door-frame { width: 96px; }
+  .hall-sign { position: relative; inset: auto; }
+  .plaque { min-width: 0; width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) { .door-leaf { transition: none; } }

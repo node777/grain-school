@@ -5,10 +5,10 @@ import type { CSSProperties } from 'react'
 import type { BoardLine } from './lesson'
 
 const keyOf = (l: BoardLine): string =>
-  l.kind === 'doors' ? 'doors' : `${l.kind}:${l.text}`
+  l.kind === 'doors' ? 'doors' : l.kind === 'pair' ? `pair:${l.name}` : `${l.kind}:${l.text}`
 
 const lenOf = (l: BoardLine): number =>
-  l.kind === 'doors' ? 7 * 10 : l.text.length
+  l.kind === 'doors' ? 7 * 10 : l.kind === 'pair' ? l.name.length + l.hint.length : l.text.length
 
 /** Chalk moves at about this many milliseconds a letter. */
 const MS_PER_CHAR = 42
@@ -44,6 +44,8 @@ function Line({ line, fresh, style }: { line: BoardLine; fresh: boolean; style?:
       return <h2 className={`chalk chalk-title${cls}`} style={style}>{line.text}</h2>
     case 'line':
       return <p className={`chalk chalk-line${cls}`} style={style}>{line.text}</p>
+    case 'pair':
+      return <p className={`chalk chalk-pair${cls}`} style={style}>{line.name} <span className="chalk-note">{line.hint}</span></p>
     case 'stamp':
       return (
         <p className={`chalk chalk-stamp${cls}`} style={style}>

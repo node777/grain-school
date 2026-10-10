@@ -1,26 +1,41 @@
-// The frame: the atlas's top bar, school edition, over the classroom.
+// The frame: the atlas's top bar, school edition, over the room the hash names.
 
 import { useEffect } from 'react'
 import { useStore } from '@/core/store'
 import { applyTheme, settings } from '@/core/settings'
+import { useRoute } from '@/core/router'
 import { Mark } from '@/ui/Mark'
 import { Classroom } from '@/school/Classroom'
+import { Hall } from '@/school/Hall'
 import { ATLAS_HOST, ATLAS_URL, GRAIN_URL } from '@/school/links'
 
 export function Shell() {
   const s = useStore(settings)
+  const route = useRoute()
   useEffect(() => applyTheme(s), [s])
+  const inHall = route.room === 'hall'
   return (
     <div className="school">
       <header className="topbar">
-        <a className="wordmark" href="./" aria-label="Grain School, home">
+        <a className="wordmark" href="#/" aria-label="Grain School, the classroom">
           <Mark size={22} />
           <span>Grain <em>School</em></span>
         </a>
-        <span className="here"><b>Lesson one</b> <span className="faint">-- the atlas, with Kyri</span></span>
+        <nav className="rooms" aria-label="Rooms">
+          <a href="#/" aria-current={!inHall ? 'page' : undefined}>Classroom</a>
+          <a href="#/hall" aria-current={inHall ? 'page' : undefined}>Hall</a>
+        </nav>
         <span className="spacer" />
         <a className="chip quiet" href={GRAIN_URL}>grain <span className="faint">on GitHub</span></a>
         <a className="chip cta" href={ATLAS_URL}>Open the Atlas <span className="faint">{ATLAS_HOST}</span> <span aria-hidden="true">↗</span></a>
+        <button
+          className="icon-btn side-btn"
+          title={s.side === 'left' ? 'Teacher stands on the left; move to the right' : 'Teacher stands on the right; move to the left'}
+          aria-label="Switch the teacher's side"
+          onClick={() => settings.set({ side: s.side === 'left' ? 'right' : 'left' })}
+        >
+          {s.side === 'left' ? '⇥' : '⇤'}
+        </button>
         <button
           className="icon-btn"
           aria-pressed={s.motion === 'still'}
@@ -38,7 +53,7 @@ export function Shell() {
         </button>
       </header>
       <main className="stage">
-        <Classroom />
+        {route.room === 'hall' ? <Hall /> : <Classroom key={route.lesson} lessonId={route.lesson} />}
       </main>
       {/* chalk: a slight wobble to the strokes, and a few gaps where the stick skipped */}
       <svg className="defs" aria-hidden="true" focusable="false">

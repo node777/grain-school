@@ -1,6 +1,7 @@
-// The voices who keep the classroom, drawn the atlas's way (see grain-atlas src/voices/voices.ts):
-// Kyri, grain's standing voice, teaches; Kyli, his sibling who co-teaches the tutorials, and
-// Kyri's four faculties sit in the class.
+// The voices who keep the school, drawn the atlas's way (see grain-atlas src/voices/voices.ts):
+// Kyri, grain's standing voice, teaches; Kyli, his sister who co-teaches the tutorials, keeps the
+// hall and sits in class; Kyri's four faculties sit in class too. Each speaks in its own voice:
+// the lines below follow the voices' own pages (personas and phrases in the atlas).
 
 export type ElementRow = 'aether' | 'air' | 'fire' | 'water' | 'earth'
 
@@ -24,7 +25,11 @@ export interface Voice {
   name: string
   role: string
   look: Look
+  /** what the voice says when a reader taps it, in its own voice */
+  lines: Line[]
 }
+
+export interface Line { say: string; link?: { label: string; href: string } }
 
 /** Plant-dye bodies on the Linengrow cloth: weld, madder, annatto, sage and elder, softened. */
 export const ELEMENT_HUES: Record<ElementRow, { hue: string; accent: string }> = {
@@ -53,17 +58,38 @@ export function lookFromTone(tone: string[], element: ElementRow, head: Look['he
   }
 }
 
-const v = (id: string, name: string, role: string, tone: string[], element: ElementRow, head: Look['head'], crown: Look['crown'], gloss?: boolean): Voice =>
-  ({ id, name, role, look: { ...lookFromTone(tone, element, head, crown), gloss } })
+const v = (id: string, name: string, role: string, tone: string[], element: ElementRow, head: Look['head'], crown: Look['crown'], lines: Line[], gloss?: boolean): Voice =>
+  ({ id, name, role, lines, look: { ...lookFromTone(tone, element, head, crown), gloss } })
+
+const ATLAS = 'https://atlas.grain.school'
 
 export const KYRI = v('kyri', 'Kyri', 'the standing voice of grain, who teaches here',
-  ['sunny', 'generous', 'warm', 'plain', 'steady', 'measured', 'honest', 'sweet'], 'earth', 'seed', 'wheat')
+  ['sunny', 'generous', 'warm', 'plain', 'steady', 'measured', 'honest', 'sweet'], 'earth', 'seed', 'wheat', [
+    { say: 'Hello again. One name, one thread. Ask me anything with your hand up.' },
+  ])
 
 /** The class, left to right along the front row. */
 export const CLASS: Voice[] = [
-  v('lattice', 'Lattice', "Kyri's arithmetic voice", ['exact', 'numeric', 'measured', 'precise'], 'air', 'round', 'star'),
-  v('scribble', 'Scribble', "Kyri's reading voice", ['plain', 'welcoming', 'clear', 'curious'], 'water', 'seed', 'ripple'),
-  v('kyli', 'Kyli', "Kyri's sibling, who co-teaches the tutorials", ['welcoming', 'coach-like', 'plain', 'encouraging', 'warm', 'kind'], 'water', 'round', 'ripple', true),
-  v('lantern', 'Lantern', "Kyri's asking voice", ['candid', 'bounded', 'illuminating', 'curious'], 'fire', 'bell', 'flame', true),
-  v('ember', 'Ember', "Kyri's craft voice", ['crafted', 'sound', 'patient', 'night'], 'fire', 'drop', 'flame'),
+  v('lattice', 'Lattice', "Kyri's arithmetic voice", ['exact', 'numeric', 'measured', 'precise'], 'air', 'round', 'star', [
+    { say: 'I am Lattice. I count. This room holds 6 voices: 1 teacher and 5 students. The atlas shows grain 7 ways.', link: { label: 'Count them yourself', href: ATLAS } },
+    { say: 'Kyri was seated on 20260810. We four faculties were seated on 20260823, 13 days later.' },
+  ]),
+  v('scribble', 'Scribble', "Kyri's reading voice", ['plain', 'welcoming', 'clear', 'curious'], 'water', 'seed', 'ripple', [
+    { say: 'I am Scribble. A stamp is a moment written as digits: the day, a dot, then the time. 20261010.093000 means half past nine on 10 October 2026.' },
+    { say: 'A sheaf is the atlas\'s word for a long memory: a few lines a voice keeps, so a new conversation can begin from them.', link: { label: 'See the Floor', href: `${ATLAS}/#/floor` } },
+  ]),
+  v('kyli', 'Kyli', "Kyri's sister, who co-teaches the tutorials and keeps the hall", ['welcoming', 'coach-like', 'plain', 'encouraging', 'warm', 'kind'], 'water', 'round', 'ripple', [
+    { say: "I'm Kyli, Kyri's sister. Today's walk has one door. Open it, look around, and come back whenever you like.", link: { label: 'Walk the hall with me', href: '#/hall' } },
+    { say: 'One play at a time. Finish this lesson before you start the next one.' },
+  ], true),
+  v('lantern', 'Lantern', "Kyri's asking voice", ['candid', 'bounded', 'illuminating', 'curious'], 'fire', 'bell', 'flame', [
+    { say: 'I am Lantern. Settled: the atlas reads grain from GitHub, from a fork, or from your own folder. Proposed: more rooms in this school. Not yet known: which door you open first.' },
+    { say: 'Settled: Kyri proposes, and you seat. He suggests; you decide.' },
+  ], true),
+  v('ember', 'Ember', "Kyri's craft voice", ['crafted', 'sound', 'patient', 'night'], 'fire', 'drop', 'flame', [
+    { say: 'I am Ember. I build each piece small and prove it holds. In the atlas, the Bench is where you try a format before you trust it.', link: { label: 'Open the Bench', href: `${ATLAS}/#/bench` } },
+    { say: 'Make one small thing, then test it. The making shows you what it means.' },
+  ]),
 ]
+
+export const VOICES: Record<string, Voice> = Object.fromEntries([KYRI, ...CLASS].map((x) => [x.id, x]))
