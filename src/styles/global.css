@@ -50,10 +50,6 @@ button { font: inherit; color: inherit; }
 .wordmark:hover { color: var(--ink); }
 .wordmark em { color: var(--brass); font-style: italic; }
 .wordmark svg { align-self: center; }
-.rooms { display: flex; gap: 2px; }
-.rooms a { padding: 4px 9px; border-radius: var(--r2); color: var(--ink-2); text-decoration: none; }
-.rooms a:hover { color: var(--ink); background: color-mix(in srgb, var(--surface) 70%, transparent); }
-.rooms a[aria-current='page'] { color: var(--ink); box-shadow: inset 0 -2px 0 var(--brass); border-radius: var(--r2) var(--r2) 0 0; }
 .here { color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .here b { color: var(--ink); font-weight: 600; }
 .topbar .spacer { flex: 1; }
@@ -90,6 +86,4 @@ button { font: inherit; color: inherit; }
   .topbar { gap: 8px; padding: 8px 12px; }
   .topbar .here, .topbar .chip.quiet, .topbar .chip .faint, .topbar .side-btn { display: none; }
   .wordmark { font-size: 18px; }
-  .wordmark span { display: none; }
-  .rooms a { padding: 4px 6px; }
 }

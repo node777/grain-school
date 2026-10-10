@@ -13,7 +13,6 @@ export function Shell() {
   const s = useStore(settings)
   const route = useRoute()
   useEffect(() => applyTheme(s), [s])
-  const inHall = route.room === 'hall'
   return (
     <div className="school">
       <header className="topbar">
@@ -21,10 +20,6 @@ export function Shell() {
           <Mark size={22} />
           <span>Grain <em>School</em></span>
         </a>
-        <nav className="rooms" aria-label="Rooms">
-          <a href="#/" aria-current={!inHall ? 'page' : undefined}>Classroom</a>
-          <a href="#/hall" aria-current={inHall ? 'page' : undefined}>Hall</a>
-        </nav>
         <span className="spacer" />
         <a className="chip quiet" href={GRAIN_URL}>grain <span className="faint">on GitHub</span></a>
         <a className="chip cta" href={ATLAS_URL}>Open the Atlas <span className="faint">{ATLAS_HOST}</span> <span aria-hidden="true">↗</span></a>

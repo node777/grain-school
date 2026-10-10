@@ -5,7 +5,7 @@
 // (back), it is a head and a crown with no face, for a classmate facing the board.
 
 import { useEffect, useRef, useState } from 'react'
-import type { Look } from './voices'
+import { EYE_TINTS, type Look } from './voices'
 import { prefersStill } from '@/core/settings'
 
 interface Props {
@@ -104,6 +104,7 @@ export function Character({ look, size = 72, speaking, thinking, mood = 'idle', 
   const eyeY = 56 + (ryOpen - ry) * 0.5
   const gx = thinking ? 2 : gaze.x, gy = thinking ? -2 : gaze.y
   const mouthY = 73
+  const eye = look.eye ?? EYE_TINTS[0]
   const curve = smile * 5
   const open = mouthOpen * 4.5
 
@@ -126,16 +127,11 @@ export function Character({ look, size = 72, speaking, thinking, mood = 'idle', 
           : <>
             {look.gloss && <ellipse cx="34" cy="31" rx="11" ry="6" transform="rotate(-24 34 31)" fill="#fff8ea" opacity="0.3" />}
             {look.cheeks && <g fill={look.accent} opacity="0.28"><circle cx="24" cy="69" r="5.5" /><circle cx="76" cy="69" r="5.5" /></g>}
-            {/* eyes */}
+            {/* eyes: big, solid and light, each voice's its own pale tint; they glance toward the pointer */}
             <g transform={`translate(${gx} ${gy})`}>
               {[35, 65].map((cx) => blink
                 ? <path key={cx} d={`M${cx - rx} ${eyeY} Q${cx} ${eyeY + 3} ${cx + rx} ${eyeY}`} stroke={INK} strokeWidth="2.4" fill="none" strokeLinecap="round" />
-                : (
-                  <g key={cx}>
-                    <ellipse cx={cx} cy={eyeY} rx={rx} ry={ry} fill={INK} />
-                    {look.gloss && <circle cx={cx - rx * 0.32} cy={eyeY - ry * 0.38} r={r * 0.24} fill="#fff8ea" />}
-                  </g>
-                ))}
+                : <ellipse key={cx} cx={cx} cy={eyeY} rx={rx} ry={ry} fill={eye} stroke={INK} strokeWidth="2" />)}
             </g>
             {/* mouth */}
             {open > 0.5

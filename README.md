@@ -22,13 +22,14 @@ ways. Every road in the room leads there.
   is talking owns the speech bubble, with their name in their own dye.
 - **The clock** above the board is grain's one clock, `YYYYMMDD.HHMMSS`, in your local time.
 - **Your desk** holds a bound copy of the atlas. Open it.
-- **The hall** (`#/hall`) has a door for each grain tool, and Kyli keeps it. Point at a door and she
+- **The hall** (`#/hall`) has a door for each grain tool, and Kyli keeps it. You reach it from inside
+  the school: tap Kyli, ask Kyri "What else is in the school?", or finish lesson two. Point at a door and she
   tells you about it. Room 1 is the Atlas, room 2 is the Stacks (grain itself on GitHub), and
   rooms 3 and 4 are kept for the next tools. Add a tool in `src/school/tools.ts` and it gets a door.
 
 The look and the parts come from [grain-atlas](https://github.com/node777/grain-atlas): the same
 tokens (Stone by day, Hearth by night, plant dyes, no blue), self-hosted fonts, wheat mark,
-character renderer and store. Still motion (your OS setting, or ◈ in the top bar) stops everything
+character renderer (solid light eyes, a tint per voice) and store. Still motion (your OS setting, or ◈ in the top bar) stops everything
 that is not triggered by you.
 
 ## Run it

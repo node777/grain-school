@@ -17,7 +17,18 @@ export interface Look {
   bob: number             // 0 still .. 1 lively
   hue: string             // body colour
   accent: string          // crown and cheeks
-  gloss?: boolean         // a soft sheen and a catchlight, for a few lit voices
+  gloss?: boolean         // a soft sheen, for a few lit voices
+  eye?: string            // the eyes' solid colour, one of EYE_TINTS
+}
+
+/** Light, solid eye colours, warm like the cloth: cream, wheat, rose, apricot, sage, lilac, peach. */
+export const EYE_TINTS = ['#fbf4e0', '#f6e6bd', '#f7ddd3', '#f4e1c4', '#e5ecd0', '#ebe0ef', '#f6d9c3', '#f2ead2'] as const
+
+/** Each name keeps the same tint wherever its face is drawn (the atlas's own rule). */
+export function eyeFor(name: string): string {
+  let h = 0
+  for (const c of name) h = (h * 31 + c.charCodeAt(0)) >>> 0
+  return EYE_TINTS[h % EYE_TINTS.length]
 }
 
 export interface Voice {
@@ -59,7 +70,7 @@ export function lookFromTone(tone: string[], element: ElementRow, head: Look['he
 }
 
 const v = (id: string, name: string, role: string, tone: string[], element: ElementRow, head: Look['head'], crown: Look['crown'], lines: Line[], gloss?: boolean): Voice =>
-  ({ id, name, role, lines, look: { ...lookFromTone(tone, element, head, crown), gloss } })
+  ({ id, name, role, lines, look: { ...lookFromTone(tone, element, head, crown), gloss, eye: eyeFor(name) } })
 
 const ATLAS = 'https://atlas.grain.school'
 
