@@ -1,0 +1,35 @@
+{
+  "name": "grain-school",
+  "version": "0.1.0",
+  "description": "grain.school -- a classroom where Kyri teaches, and the door to the Grain Atlas",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit -p . && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit -p ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/node777/grain-school.git"
+  },
+  "license": "MIT",
+  "homepage": "https://grain.school",
+  "dependencies": {
+    "@fontsource/public-sans": "^5.1.1",
+    "@fontsource/source-code-pro": "^5.1.1",
+    "@fontsource/vollkorn": "^5.1.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "^5.7.3",
+    "vite": "^5.4.14",
+    "vitest": "^2.1.9"
+  },
+  "private": true,
+  "type": "module"
+}

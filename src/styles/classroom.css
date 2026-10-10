@@ -1,0 +1,263 @@
+/*
+ * The classroom. One room on the Linengrow cloth: the page is the wall, a wainscot of the finer
+ * weave runs below the chair rail, and the floor is boards. The blackboard is a warm slate in a
+ * wooden frame (a board is dark in both modes, as boards are). Chalk is the star-colour of the
+ * atlas's sky, with weld for headings and madder for doors.
+ *
+ * Shape law kept: rounded, never square, never circular for an enclosure -- so the clock is a
+ * brass plaque, not a dial.
+ */
+
+:root {
+  --board: #262b21;
+  --board-hi: #313828;
+  --chalk: #efe6d2;
+  --chalk-weld: #e9d27e;
+  --chalk-madder: #eeb19f;
+  --wood: #6b4a2c;
+  --wood-hi: #85603a;
+  --wood-lo: #4a321d;
+  --floor-a: #3b3027;
+  --floor-b: #352b23;
+}
+:root[data-mode='stone'] {
+  --wood: #7a5532;
+  --wood-hi: #9a7046;
+  --wood-lo: #573a21;
+  --floor-a: #b7a283;
+  --floor-b: #ad987a;
+}
+
+/* ---------- the room ---------- */
+.classroom { position: absolute; inset: 0; }
+.wall { position: absolute; inset: 0; pointer-events: none; }
+.lamp {
+  position: absolute; left: 0; right: 0; top: 0; height: 75%;
+  background: radial-gradient(ellipse 48% 70% at 36% 0%, color-mix(in srgb, var(--gold) 13%, transparent), transparent 70%);
+}
+:root[data-mode='stone'] .lamp { background: radial-gradient(ellipse 48% 70% at 36% 0%, rgba(255, 250, 235, .45), transparent 70%); }
+.wainscot {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 40%;
+  background-color: var(--surface);
+  background-image:
+    repeating-linear-gradient(90deg, transparent 0 calc(12.5% - 1px), rgba(var(--thread), .07) calc(12.5% - 1px) 12.5%),
+    repeating-linear-gradient(0deg, rgba(var(--thread), calc(var(--thread-a) * 0.8)) 0 1px, transparent 1px 3px);
+  border-top: 6px solid var(--wood);
+  box-shadow: 0 -1px 0 var(--wood-hi), 0 -8px 18px rgba(0, 0, 0, .12);
+}
+.floor {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 17%;
+  background: repeating-linear-gradient(90deg, var(--floor-a) 0 120px, var(--floor-b) 120px 122px, var(--floor-a) 122px 240px);
+  border-top: 3px solid var(--wood-lo);
+}
+
+/* ---------- the clock ---------- */
+.clock {
+  position: absolute; left: 34.5%; top: 2%; transform: translateX(-50%); z-index: 2;
+  display: grid; justify-items: center; gap: 0; padding: 4px 16px 6px;
+  border-radius: var(--r3); border: 1px solid var(--brass-dim);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--brass) 22%, var(--surface)), var(--surface));
+  box-shadow: 0 3px 10px rgba(0, 0, 0, .2);
+  transition: box-shadow var(--respond) var(--ease), border-color var(--respond) var(--ease);
+}
+.clock time { font-size: clamp(14px, 1.5vw, 19px); color: var(--ink-surface); letter-spacing: .04em; }
+.clock time b { color: var(--brass); }
+.clock-label { font-family: var(--sans); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); }
+.clock.lit { border-color: var(--gold); box-shadow: 0 0 0 3px color-mix(in srgb, var(--gold) 30%, transparent), 0 3px 10px rgba(0, 0, 0, .2); }
+
+/* ---------- the blackboard ---------- */
+.board { position: absolute; left: 4%; top: 11%; width: 61%; height: 53%; z-index: 1; display: grid; grid-template-rows: 1fr auto; }
+.board-slate {
+  position: relative; min-height: 0;
+  border-radius: var(--r3);
+  border: clamp(8px, 1vw, 13px) solid var(--wood);
+  box-shadow: inset 0 0 0 1px var(--wood-lo), 0 0 0 1px var(--wood-lo), 0 10px 30px rgba(0, 0, 0, .3), inset 0 2px 24px rgba(0, 0, 0, .45);
+  background:
+    radial-gradient(ellipse 30% 22% at 22% 30%, rgba(239, 230, 210, .045), transparent 70%),
+    radial-gradient(ellipse 26% 30% at 74% 66%, rgba(239, 230, 210, .04), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 50% 100%, rgba(239, 230, 210, .035), transparent 70%),
+    linear-gradient(170deg, var(--board-hi), var(--board) 60%);
+  overflow: hidden;
+}
+.board-writing {
+  position: absolute; inset: 0; overflow: auto; scrollbar-width: none;
+  padding: clamp(14px, 2.4vw, 34px) clamp(18px, 3vw, 44px);
+  display: flex; flex-direction: column; gap: clamp(4px, .9vh, 12px);
+  color: var(--chalk);
+}
+.chalk { margin: 0; filter: url(#chalk); }
+.chalk-title { font-weight: 400; font-style: italic; font-size: clamp(24px, 3.1vw, 46px); line-height: 1.15; color: var(--chalk-weld); }
+.chalk-title::after {
+  content: ''; display: block; height: 2px; width: 6.5em; max-width: 90%; margin-top: .22em;
+  background: color-mix(in srgb, var(--chalk-weld) 70%, transparent); border-radius: 2px; transform: rotate(-.5deg);
+}
+.chalk-line { font-size: clamp(17px, 2.1vw, 30px); line-height: 1.3; }
+.chalk-note { font-style: italic; opacity: .72; font-size: .78em; }
+.chalk-stamp { font-size: clamp(17px, 2vw, 28px); line-height: 1.3; }
+.chalk-stamp .mono { letter-spacing: .06em; color: var(--chalk-weld); }
+.chalk-link { color: var(--chalk-madder); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 5px; text-decoration-color: color-mix(in srgb, var(--chalk-madder) 55%, transparent); }
+.chalk-link:hover { color: var(--chalk); text-decoration-color: var(--chalk); }
+.chalk-doors {
+  padding: 0 0 0 1.6em; margin: 0; columns: 2; column-gap: 2.4em;
+  font-size: clamp(16px, 1.75vw, 25px); line-height: 1.5;
+}
+.chalk-doors li { break-inside: avoid; }
+.chalk-doors li::marker { color: color-mix(in srgb, var(--chalk) 60%, transparent); font-family: var(--serif); }
+
+/* written in, left to right, as the stick moves */
+.chalk-in { animation: chalk-write var(--dur, 900ms) steps(24, end) var(--delay, 0ms) both; }
+@keyframes chalk-write { from { clip-path: inset(-20% 100% -20% 0); } to { clip-path: inset(-20% -2% -20% 0); } }
+.chalk-doors.chalk-in { animation-name: chalk-write-down; }
+@keyframes chalk-write-down { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 -2% 0); } }
+:root[data-motion='still'] .chalk-in, :root[data-motion='still'] .bubble-link, :root[data-motion='still'] .mydesk.called .book { animation: none; }
+@media (prefers-reduced-motion: reduce) { .chalk-in, .bubble-link, .mydesk.called .book { animation: none; } }
+
+.board-tray {
+  position: relative; height: clamp(10px, 1.2vw, 15px); margin: 0 3%;
+  background: linear-gradient(180deg, var(--wood-hi), var(--wood) 50%, var(--wood-lo));
+  border-radius: 0 0 var(--r1) var(--r1);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, .25);
+}
+.chalk-stick { position: absolute; bottom: 60%; left: 12%; width: 34px; height: 7px; border-radius: 3px; background: var(--chalk); box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .12); }
+.chalk-stick.yellow { left: calc(12% + 42px); width: 26px; background: var(--chalk-weld); }
+.chalk-stick.short { left: calc(12% + 78px); width: 14px; }
+.eraser {
+  position: absolute; bottom: 60%; right: 14%; width: 64px; height: 16px; border-radius: var(--r1);
+  background: linear-gradient(180deg, var(--wood-hi) 0 45%, #5a5148 45%);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, .3);
+}
+
+/* ---------- Kyri and the speech bubble ---------- */
+.teacher {
+  position: absolute; left: 67%; right: 2.5%; top: 5%; bottom: 31%; z-index: 3;
+  display: flex; flex-direction: column; justify-content: space-between; gap: 10px;
+}
+.bubble {
+  position: relative; border: 1px solid var(--rule); border-radius: var(--r4);
+  padding: 12px 16px 8px; box-shadow: 0 12px 30px rgba(0, 0, 0, .28);
+  max-height: 100%; overflow: auto;
+}
+.bubble::after {
+  content: ''; position: absolute; left: 54px; bottom: -11px; width: 20px; height: 20px;
+  background: var(--surface); border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+  transform: rotate(45deg); border-radius: 0 0 var(--r1) 0;
+}
+.bubble-who { font-size: 12px; display: flex; gap: 6px; align-items: baseline; }
+.bubble-who b { color: var(--brass); font-weight: 600; letter-spacing: .04em; }
+:root[data-mode='stone'] .bubble-who b { color: var(--brass-dim); }
+.bubble-say { margin: 4px 0 8px; font-size: clamp(16px, 1.35vw, 19.5px); line-height: 1.5; color: var(--ink-surface); min-height: 4.5em; }
+.caret[hidden] { display: none; }
+.caret { display: inline-block; width: 2px; height: 1em; margin-left: 2px; vertical-align: -0.12em; background: var(--brass); animation: vc-think 1s steps(2) infinite; }
+.bubble-link {
+  display: inline-flex; gap: 6px; align-items: center; margin: 0 0 8px; padding: 6px 14px;
+  border-radius: var(--r3); border: 1px solid var(--brass); background: color-mix(in srgb, var(--brass) 18%, var(--surface));
+  font-family: var(--sans); font-size: 14px; font-weight: 600; color: var(--ink-surface); text-decoration: none;
+  animation: invite 1.6s var(--ease) 4;
+}
+.bubble-link:hover { background: color-mix(in srgb, var(--brass) 30%, var(--surface)); color: var(--ink-surface); }
+@keyframes invite { 0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--invite) 0%, transparent); } 50% { box-shadow: 0 0 0 5px color-mix(in srgb, var(--invite) 28%, transparent); } }
+.bubble-controls { display: flex; align-items: center; gap: 4px; border-top: 1px solid var(--rule); padding-top: 6px; }
+.bubble-controls .spacer { flex: 1; }
+.bubble-controls .next { color: var(--gold); border-color: var(--rule); }
+:root[data-mode='stone'] .bubble-controls .next { color: var(--annatto); }
+.bubble-controls .hand.up { color: var(--invite); border-color: var(--invite); }
+.dots { display: inline-flex; gap: 2px; align-items: center; }
+.dot { width: 18px; height: 18px; padding: 0; border: none; background: none; cursor: pointer; display: grid; place-items: center; }
+.dot::before { content: ''; width: 7px; height: 7px; border-radius: 2px; background: var(--rule); transition: background var(--respond) var(--ease), width var(--respond) var(--ease); }
+.dot:hover::before { background: var(--ink-3); }
+.dot.on::before { width: 14px; background: var(--brass); }
+.questions { list-style: none; margin: 8px 0 4px; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+
+.kyri { position: relative; align-self: flex-start; margin-left: 18px; display: grid; justify-items: center; flex: none; }
+.kyri .voice-character { width: clamp(120px, 13vw, 192px); height: auto; filter: drop-shadow(0 5px 6px rgba(0, 0, 0, .2)); }
+.kyri-name { margin-top: -8px; font-size: 11px; color: var(--gold); background: var(--surface); border: 1px solid var(--rule); border-radius: var(--r1); padding: 0 7px; }
+:root[data-mode='stone'] .kyri-name { color: var(--brass-dim); }
+/* the wheat pointer pivots at Kyri's side and rests on what he is talking about */
+.pointer {
+  position: absolute; right: 78%; top: 52%; width: clamp(100px, 11vw, 170px); height: 20px;
+  transform-origin: 100% 50%; transform: rotate(-62deg); opacity: 0;
+  transition: transform var(--settle) var(--ease), opacity var(--respond) var(--ease);
+}
+.pointer svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.kyri[data-point='board'] .pointer { opacity: 1; transform: rotate(14deg); }
+.kyri[data-point='clock'] .pointer { opacity: 1; transform: rotate(40deg) scaleX(1.25); }
+.kyri[data-point='desk'] .pointer { opacity: 1; transform: rotate(-46deg) scaleX(1.2); }
+
+/* ---------- the class ---------- */
+.classmates {
+  position: absolute; left: 5%; right: 5%; bottom: 14%; z-index: 4;
+  display: flex; justify-content: space-around; align-items: flex-end; pointer-events: none;
+}
+.seat { margin: 0; display: grid; justify-items: center; pointer-events: auto; }
+.seat .voice-character { width: clamp(58px, 7vw, 100px); height: auto; margin-bottom: -18%; position: relative; z-index: 0; }
+.chair {
+  position: relative; z-index: 1; min-width: clamp(78px, 9vw, 128px); padding: 7px 10px 16px; text-align: center;
+  border-radius: var(--r2) var(--r2) var(--r1) var(--r1);
+  background: linear-gradient(180deg, var(--wood-hi), var(--wood) 30%, var(--wood-lo));
+  color: color-mix(in srgb, var(--gold-pale) 80%, transparent); font-size: 11px; letter-spacing: .06em;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, .25);
+}
+/* the class sits in a shallow arc, the middle of the row a little nearer the board */
+.seat:nth-child(2), .seat:nth-child(4) { margin-bottom: 1.5%; }
+.seat:nth-child(3) { margin-bottom: 2.5%; }
+
+/* ---------- your desk ---------- */
+.mydesk { position: absolute; left: 50%; bottom: 0; width: min(560px, 56vw); height: 19%; transform: translateX(-50%); z-index: 5; }
+.desk-top {
+  position: absolute; inset: 22% 0 0; clip-path: polygon(7% 0, 93% 0, 100% 100%, 0 100%);
+  background:
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, .05) 0 2px, transparent 2px 38px),
+    linear-gradient(180deg, var(--wood-hi), var(--wood) 55%, var(--wood-lo));
+}
+.book {
+  position: absolute; left: 50%; bottom: 18%; transform: translateX(-50%) rotate(-3deg);
+  display: flex; text-decoration: none; color: var(--gold-pale);
+  filter: drop-shadow(0 8px 10px rgba(0, 0, 0, .35));
+  transition: transform var(--respond) var(--ease), filter var(--respond) var(--ease);
+}
+.book:hover, .book:focus-visible { transform: translateX(-50%) rotate(-1deg) translateY(-6px); filter: drop-shadow(0 14px 14px rgba(0, 0, 0, .35)); color: var(--gold-pale); }
+.book-spine { width: 14px; border-radius: var(--r2) 0 0 var(--r2); background: linear-gradient(90deg, #4f2219, #6e3428); }
+.book-cover {
+  display: grid; grid-template-columns: auto auto; grid-template-rows: auto auto; column-gap: 10px; align-items: center;
+  padding: 10px 20px 10px 14px; border-radius: 0 var(--r3) var(--r3) 0;
+  background: linear-gradient(160deg, #8a4434, #6e3428 70%);
+  box-shadow: inset 0 0 0 1px rgba(244, 233, 207, .18), inset 0 0 0 5px #6e3428, inset 0 0 0 6px rgba(217, 180, 90, .45);
+}
+.book-cover svg { grid-row: span 2; }
+.book-title { font-size: clamp(18px, 1.7vw, 24px); line-height: 1.1; white-space: nowrap; }
+.book-title em { color: var(--gold); }
+.book-sub { font-size: 11px; letter-spacing: .05em; color: color-mix(in srgb, var(--gold-pale) 75%, transparent); white-space: nowrap; }
+.mydesk.called .book { animation: book-call 1.4s var(--ease) 4; }
+@keyframes book-call { 0%, 100% { filter: drop-shadow(0 8px 10px rgba(0, 0, 0, .35)); } 50% { filter: drop-shadow(0 0 16px color-mix(in srgb, var(--invite) 75%, transparent)); } }
+.nameplate {
+  position: absolute; right: 12%; bottom: 14%; padding: 1px 8px; border-radius: var(--r1);
+  background: color-mix(in srgb, var(--brass) 70%, var(--wood-lo)); color: var(--sky-deep);
+  font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; transform: rotate(-2deg);
+}
+
+/* ---------- small and tall screens: the room stacks ---------- */
+@media (max-width: 900px), (max-height: 600px) {
+  .stage { overflow: auto; }
+  .classroom { position: relative; inset: auto; display: flex; flex-direction: column; gap: 18px; padding: 14px 16px 0; min-height: 100%; }
+  .wall .wainscot { height: 30%; }
+  .wall .floor { height: 14%; }
+  .clock { position: relative; left: auto; top: auto; transform: none; align-self: center; }
+  .board { position: relative; left: auto; top: auto; width: auto; height: auto; }
+  .board-slate { min-height: clamp(190px, 42vw, 320px); }
+  .teacher { position: relative; inset: auto; flex-direction: column-reverse; gap: 6px; }
+  .bubble { max-height: none; }
+  .bubble::after { left: auto; right: auto; left: 64px; bottom: auto; top: -11px; transform: rotate(225deg); }
+  .kyri { margin: 0 0 4px 6px; }
+  .kyri .voice-character { width: 84px; }
+  .nameplate { right: 3%; bottom: 4%; }
+  .pointer { display: none; }
+  .classmates { position: relative; inset: auto; padding: 8px 0 0; }
+  .seat .voice-character { width: 44px; }
+  .chair { min-width: 0; padding: 4px 6px 8px; font-size: 9.5px; }
+  .mydesk { position: relative; left: auto; transform: none; width: 100%; height: 150px; margin-top: -10px; flex: none; }
+}
+@media (max-width: 520px) {
+  .chalk-doors { columns: 1; }
+  .seat:nth-child(odd) .chair { display: none; }
+  .seat:nth-child(odd) .voice-character { margin-bottom: 0; }
+}
